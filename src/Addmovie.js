@@ -1,12 +1,22 @@
 import { useState } from "react"
-import "./Addmovie.css";
-export default function Admovie({movieDetail,setDataMovie,setStatus})
+import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
+export default function Addmovie({movieDetail,setDataMovie,setStatus})
 {
     const[image,setImage]=useState("");
     const[overview,setOverview]=useState("");
     const[title,setTitle]=useState("");
     const[rating,setRating]=useState("");
     const[releaseDate,setReleaseDate]=useState("");
+    const[statusform,setStatusForm]=useState(true);
+    const handleFileChange = (event, setImage) => {
+        const selectedFile = event.target.files[0];
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const imageContent = e.target.result;
+          setImage(imageContent);
+        };
+        reader.readAsDataURL(selectedFile);
+      };
     const handleSubmit=(e)=>
     {
         if(image===""||title===""||overview===""||rating===""||releaseDate==="")
@@ -19,6 +29,7 @@ export default function Admovie({movieDetail,setDataMovie,setStatus})
             alert("Rating should not be more than 10 of less than 1");
             return;
         }
+        alert("Movie added Successfully");
         const newMovie = {
             backdrop_path:image,
             video:true,
@@ -27,41 +38,80 @@ export default function Admovie({movieDetail,setDataMovie,setStatus})
             vote_average:rating,
             release_date:releaseDate
         }
-        setStatus(false);
+        setStatus(true);
+        setStatusForm(false);
         e.preventDefault();
         setDataMovie([...movieDetail, newMovie]);
     }
     return(
-        <>
-        <div className="addmovie-box"></div>
-        <div className="addmovie-form">
-        <form onSubmit={handleSubmit}>
-            <h3>Movie Description</h3><hr/><br/>
-        <span>Choose a Image:</span><input className="input input1" type="file" onChange={(e)=>{
-                const file = e.target.files[0];
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onload = (e) => {
-                      const imageContent = e.target.result;
-                      setImage(imageContent);
-                    };
-                    reader.readAsDataURL(file);
-                }
-            }}/><br/><br/>
-            <span>Movie Title:</span><input className="input input2" type="text"placeholder="Enter Movie Title"onChange={(e)=>{
-                setTitle(e.target.value);
-            }}/><br/><br/>
-            <span>Overview of Movie:</span><textarea className="input input3" placeholder="Enter Movie Overview"onChange={(e)=>{
-                setOverview(e.target.value);
-            }}/><br/><br/>
-            <span>Rating of Movie:</span><input className="input input4" type="number"placeholder="rating(1 to 10)"onChange={(e)=>{
-                setRating(e.target.value);
-            }}/><br/><br/>
-            <span>Release Date:</span><input className="input input5" type="date"onChange={(e)=>{
-                setReleaseDate(e.target.value);
-            }}/>
-            <button className="button">Submit Movie Description</button>
-        </form></div>
-        </>
+        <div>
+        {statusform&&
+         <form className="row g-1 border border-2 border-white rounded-2 m-auto w-50 bg-transparent" onSubmit={handleSubmit}>
+        <h1 className="text-center text-black">Add Movies</h1><hr className="text-black"/>
+        <div class="mb-1 flex-nowrap">
+        <label for="formFile" class="form-label text-white">
+          Choose Image
+        </label><br></br>
+        <input class="form-control w-50 d-inline" type="file" required id="formFile"onChange={(e)=>{handleFileChange(e,setImage)}}/>
+      </div>
+      <div class="mb-1">
+        <label for="exampleFormControlInput1" class="form-label text-white">
+        Movie Title:
+        </label>
+        <input
+          type="text"
+          class="form-control"
+          id="exampleFormControlInput1"
+          onChange={(e)=>{
+            setTitle(e.target.value);
+          }}
+          required
+        />
+      </div>
+      <div class="mb-1">
+        <label for="exampleFormControlInput2" class="form-label text-white">
+        Overview of Movie:
+        </label>
+        <input
+          type="text"
+          class="form-control"
+          id="exampleFormControlInput2"
+          onChange={(e)=>{
+            setOverview(e.target.value);
+          }}
+          required
+        />
+      </div>
+      <div class="mb-2">
+        <label for="exampleFormControlInput3" class="form-label text-white">
+        Rating of Movie:
+        </label>
+        <input
+          type="number"
+          class="form-control"
+          id="exampleFormControlInput3"
+          onChange={(e)=>{
+            setRating(e.target.value);
+          }}
+          required
+        />
+      </div>
+      <div class="mb-2">
+        <label for="exampleFormControlInput3" class="form-label text-white">
+        Release Date:
+        </label>
+        <input
+          type="date"
+          class="form-control"
+          id="exampleFormControlInput3"
+          onChange={(e)=>{
+            setReleaseDate(e.target.value);
+          }}
+          required
+        />
+      </div>
+      <button type="submit" class="btn m-lg-auto btn-dark w-75">Sumbit Movie Description</button>
+    </form>}
+        </div>
     );
 };

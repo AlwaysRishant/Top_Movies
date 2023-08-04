@@ -1,0 +1,7 @@
+.background-image {
+    background-image: url('../src/imageback1.jpg');
+    /* You can customize additional properties like size, position, etc. */
+    background-size: cover;
+    background-position: center;
+    height: 46rem;
+  }

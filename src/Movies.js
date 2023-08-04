@@ -1,5 +1,6 @@
 import{useState,useEffect} from 'react';
 import Addmovie from './Addmovie';
+import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
 import {v4} from 'uuid';
 import "./movies.css";
 export default function Movies()
@@ -7,7 +8,7 @@ export default function Movies()
     const[movies,setData]=useState(null);
     const[loading,setLoading]=useState(true);
     const[error,setError]=useState(null);
-    const[status,setStatus]=useState(false);
+    const[status,setStatus]=useState(true);
     useEffect(()=>{
         const url='https://api.themoviedb.org/3/movie/popular?api_key=4e44d9029b1270a757cddc766a1bcb63&language=en-US';
         fetch(url)
@@ -30,20 +31,19 @@ export default function Movies()
        },[])
        const handleClick=()=>
        {
-          setStatus(!status);
+          setStatus(false);
        }
        return(
-        <div className='movie'>
+        <>
+        {status&&<div className='movie'>
           <br/>
           <h1><div className='hdiv'>List of Top Rated Movies</div></h1>
           <button onClick={handleClick}><div className='bdiv'>Add more movies</div></button>
          {loading && <div className='hdiv'>Loading. Please wait. . .</div>}
          {error &&(<div>{`There is a problem in loading the user data:${error}`}</div>)}
-         <div>{status && <Addmovie movieDetail={movies}setDataMovie={setData} setStatus={setStatus}/>}</div>
          <ul>
           {movies && movies.map((movie)=>(
             <div key={v4()}className='movie_box'>
-              {console.log(movie.backdrop_path)}
             <li>
               {movie.video && <img className='movie_backdrop' src={`${movie.backdrop_path}`}alt='Not found' ></img>}
               {!movie.video && <img className='movie_backdrop' src={`https://image.tmdb.org/t/p/original${movie.backdrop_path}`}alt='Not found' ></img>}<br/><br/>
@@ -55,6 +55,8 @@ export default function Movies()
             </div>
           ))}
          </ul>
-        </div>
+        </div>}
+        {!status&&<div><Addmovie movieDetail={movies}setDataMovie={setData} setStatus={setStatus}/></div>}
+        </>
       )
 }
